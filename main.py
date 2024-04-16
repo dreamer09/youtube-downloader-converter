@@ -21,16 +21,15 @@ Copyright (c) NeuralNine 2020
 choice = input("Choice: ")
 
 if choice == "1" or choice == "2":
-    quality = input("Please choose a quality (low, medium, high, very high):")
     if choice == "2":
         link = input("Enter the link to the playlist: ")
         print("Downloading playlist...")
-        youtube_downloader.download_playlist(link, quality)
+        youtube_downloader.download_playlist(link)
         print("Download finished!")
     if choice == "1":
         links = youtube_downloader.input_links()
         for link in links:
-            youtube_downloader.download_video(link, quality)
+            youtube_downloader.download_video(link)
 elif choice == "3":
     links = youtube_downloader.input_links()
     for link in links:

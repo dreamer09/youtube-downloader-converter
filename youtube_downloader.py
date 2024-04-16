@@ -1,19 +1,34 @@
 import pytube
 
-def download_video(url, resolution):
+def download_video(url, resolution=None):
     itag = choose_resolution(resolution)
     video = pytube.YouTube(url)
-    stream = video.streams.get_by_itag(itag)
-    stream.download()
-    return stream.default_filename
+    if resolution is None:
+        for index, stream in enumerate(video.streams):
+            print(f"{index} - Tag: {stream.itag}, Type: {stream.type}, MIME-Type: {stream.mime_type}, Res: {stream.resolution}")
+
+        index = input("Choice an Index to download: ")
+        stream = video.streams[int(index)]
+    else:
+        stream = video.streams.get_by_itag(itag)
+    
+    if stream:
+        stream.download()
+        return stream.default_filename
+    else:
+        print(f"can't found specified stream in {url}")
+        print(f"streams: {video.streams}")
+        return ""
 
 def download_videos(urls, resolution):
     for url in urls:
+        print(f"downloading {url} with resolution: {resolution}")
         download_video(url, resolution)
 
-def download_playlist(url, resolution):
+def download_playlist(url):
+    quality = input("Please choose a quality (low, medium, high, very high):")
     playlist = pytube.Playlist(url)
-    download_videos(playlist.video_urls, resolution)
+    download_videos(playlist.video_urls, quality)
 
 def choose_resolution(resolution):
     if resolution in ["low", "360", "360p"]:
